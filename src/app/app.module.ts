@@ -1,0 +1,59 @@
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
+
+import { HttpClientModule, provideHttpClient, withInterceptors } from "@angular/common/http";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MsalModule, MsalRedirectComponent } from "@azure/msal-angular";
+import { NgxSpinnerModule } from "ngx-spinner";
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { MsalGuardConfig, MsalInstance, MsalInterceptorConfig } from "./app.config";
+import { CoreModule } from "./core/core.module";
+import { httpRequestAuthorizationInterceptor } from "./core/interceptors/http-request-authorization.interceptor";
+import { httpRequestHandlerErrorsInterceptor } from "./core/interceptors/http-request-handler-api-errors.interceptor";
+import { httpRequestLoadingInterceptor } from "./core/interceptors/http-request-loading.interceptor";
+import { SeguridadModule } from "./modules/seguridad/seguridad.module";
+import { SharedModule } from "./shared/shared.module";
+import { DashboardComponent } from "./modules/dashboard/dashboard.component";
+import { FormsModule } from '@angular/forms';
+import { GuiasModule } from "./modules/guias/guias.module";
+import { ConsolidatedModalComponent } from "@core/components/consolidated-modal/consolidated-modal.component";
+import { AddConsignacionModalComponent } from "@core/components/add-consignacion-modal/add-consignacion-modal.component";
+import { AddFileModalComponent } from "@core/components/add-file/add-file-modal.component";
+
+
+@NgModule({
+  declarations: [AppComponent, DashboardComponent,
+    ConsolidatedModalComponent, AddConsignacionModalComponent,
+    AddFileModalComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    SeguridadModule,
+    CoreModule,
+    HttpClientModule,
+    SharedModule,
+    GuiasModule,
+    BrowserAnimationsModule,
+    FormsModule  ,
+    NgxSpinnerModule.forRoot({ type: 'ball-fussion' }),
+    MsalModule.forRoot(
+      MsalInstance(),
+      MsalGuardConfig(),
+      MsalInterceptorConfig()
+    )
+  ],
+  providers: [
+    provideHttpClient(
+      withInterceptors([
+        httpRequestAuthorizationInterceptor,
+        httpRequestLoadingInterceptor,
+        httpRequestHandlerErrorsInterceptor
+      ])
+    )
+  ],
+  bootstrap: [AppComponent, MsalRedirectComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class AppModule { }

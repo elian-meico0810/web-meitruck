@@ -1,0 +1,26 @@
+<!-- Overlay -->
+<div class="modal-overlay">
+  <!-- Modal -->
+  <div class="modal-alert">
+    <!-- Ícono -->
+    <div class="flex justify-center mb-5">
+      <div class="icon-container" [ngClass]="success ? 'border-[#1651CF]' : 'border-red-500'">
+        <i
+          [ngClass]="success ? 'fa-solid fa-check text-[#1651CF]' : 'fa-solid fa-x text-red-500'">
+        </i>
+      </div>
+    </div>
+
+    <!-- Texto dinámico -->
+    <h3 class="modal-title mb-4">{{ mensaje }}</h3>
+
+    <!-- Botón dinámico -->
+    <div class="flex justify-center mt-2">
+      <button
+        (click)="close()"
+        [ngClass]="success ? 'btn-primary-alert' : 'btn-danger-alert'">
+        {{ textoBoton }}
+      </button>
+    </div>
+  </div>
+</div>

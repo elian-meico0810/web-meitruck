@@ -1,0 +1,51 @@
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 6px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+  color: #374151;
+}
+
+button:hover {
+  color: #2563eb;
+}
+
+/* Página activa */
+button.active {
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* Flechas deshabilitadas */
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Selector */
+select {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+select:hover {
+  border-color: #93c5fd;
+}
+
+select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+

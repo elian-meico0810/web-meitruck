@@ -1,0 +1,29 @@
+<!-- Overlay -->
+<div class="modal-overlay">
+  <!-- Modal -->
+  <div class="modal-alert">
+    <!-- Ícono -->
+    <div class="flex justify-center mb-5">
+      <div class="icon-container">
+        <i
+          [ngClass]="success ? 'fa-solid fa-check text-[#1651CF]' : 'fa-solid fa-x text-[#1651CF]'">
+        </i>
+      </div>
+    </div>
+
+    <!-- Texto dinámico -->
+    <h3 class="modal-title">{{ mensaje }}</h3>
+    <p *ngIf="submensaje" class="modal-subtitle">{{ submensaje }}</p>
+
+    <!-- Botones dinámicos -->
+    <div class="flex justify-center gap-3 mt-4">
+      <button (click)="onAceptar()" class="btn-primary-alert">
+        {{ textoBotonAceptar }}
+      </button>
+
+      <button *ngIf="!ocultarCancelar" (click)="onCancelar()" class="btn-secondary-alert">
+        {{ textoBotonCancelar }}
+      </button>
+    </div>
+  </div>
+</div>

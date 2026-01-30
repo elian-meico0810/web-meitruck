@@ -1,0 +1,32 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+    <div class="custom-modal relative shadow-xl overflow-hidden">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-start">Agregar guía</h2>
+
+        <div class="mb-6 text-left">
+            <label class="text-sm text-gray-600">Número de guía <span class="text-red-500">*</span></label>
+            <input [(ngModel)]="numeroGuia" class="custom-input" placeholder="Ingrese número de guía" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-6 w-full justify-center">
+            <!-- Botón Cancelar con X -->
+            <button (click)="cancel()" class="btn-cancel flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Cancelar
+            </button>
+
+            <!-- Botón Agregar con Check -->
+            <button (click)="add()" class="btn-add flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 13l4 4L19 7" />
+                </svg>
+                Agregar
+            </button>
+        </div>
+    </div>
+</div>

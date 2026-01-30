@@ -1,0 +1,236 @@
+.products-title {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1;
+  color: #2B2845;
+  margin-bottom: 10px;
+}
+
+.products-title-two {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1;
+  color: #2B2845;
+  margin-bottom: 10px;
+}
+
+.invoice-container {
+  margin: 0 auto;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 400;
+  font-size: 14px !important;
+  line-height: 1;
+  color: #788095;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease;
+}
+
+.tab-button:hover {
+  color: #141D32;
+}
+
+.tab-button.active {
+  color: #141D32;
+  border-bottom: 2px solid #164194;
+}
+
+.products-table-wrapper {
+  max-height: 260px;
+  overflow-y: auto;
+  margin-top: 12px;
+  min-height: 260px;
+  position: relative; 
+}
+
+.meico-header {
+  width: 100vw;
+  height: 72px;
+  background-color: #164194;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: calc(-50vw + 50%);
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+}
+
+.products-table thead th {
+  font-size: 14px;
+  padding: 10px 0 12px;
+}
+
+.products-table tbody td {
+  font-size: 16px;
+  padding: 12px 0;
+}
+
+.products-table .right {
+  text-align: right;
+}
+
+.products-table .left {
+  text-align: left;
+}
+
+.products-table tbody tr {
+  position: relative;
+}
+
+.products-table tbody tr::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: #F0F1F5;
+}
+
+.products-table thead {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
+}
+
+
+.products-table thead::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #F0F1F5;
+}
+
+.list-bottom-line {
+  height: 4px;
+  background-color: #F0F1F5;
+  opacity: 1;
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  margin-right: -20px;
+
+  margin-top: 24px;
+}
+
+.list-bottom-line-two {
+  height: 1px;
+  background-color: #F0F1F5;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-top: 10px;
+}
+
+.summary-container {
+  margin-top: 24px;
+}
+
+.summary-row {
+  padding: 4px 0;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  color: #2B2845;
+}
+
+.summary-label {
+  font-weight: 400;
+}
+
+.summary-value {
+  font-weight: 400;
+  text-align: right;
+}
+
+.summary-value.negative {
+  color: #2B2845;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0 6px;
+  font-weight: 600;
+  font-size: 18px;
+  color: #141D32;
+}
+
+.support-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.support-title {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 100%;
+  color: #788095;
+  text-align: center;
+}
+
+.support-button {
+  width: 100%;
+  max-width: 328px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 64px;
+  border: 1px solid #164194;
+  background-color: #FFFFFF;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 100%;
+  color: #164194;
+  cursor: pointer;
+  height: 40px;
+}
+
+.support-button:hover {
+  background-color: #F5F7FB;
+}
+
+.products-table th:first-child,
+.products-table td:first-child {
+  width: 48px;
+}
+
+.products-table th:last-child,
+.products-table td:last-child {
+  width: 90px;
+}
+
+.support-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.meico-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}

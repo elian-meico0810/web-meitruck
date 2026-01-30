@@ -1,0 +1,4 @@
+/* Estilo común para todos los estados redondeados */
+.estado-pill {
+  @apply inline-flex items-center justify-center text-center uppercase font-extrabold px-8 py-2.5 text-lg shadow-md rounded-full border transition-all duration-200 min-w-[160px];
+}

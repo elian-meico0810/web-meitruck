@@ -1,0 +1,106 @@
+<!-- LOGO MEICO - AÑADIDO EN LA PARTE SUPERIOR -->
+<div class="meico-header">
+    <div class="logo-background"></div>
+    <img src="assets/img/meicoIcon.png" alt="Logo Meico" class="meico-logo" />
+</div>
+<div class="invoice-container">
+
+    <h2 class="products-title">Productos</h2>
+
+    <button class="tab-button" [class.active]="activeTab === 'delivered'" (click)="setActiveTab('delivered')">
+        Entregados
+    </button>
+
+    <button class="tab-button" [class.active]="activeTab === 'rejected'" (click)="setActiveTab('rejected')">
+        Rechazados
+    </button>
+
+    <!-- CONTENEDOR -->
+    <div class="products-list-container">
+        <!-- SCROLL -->
+        <div class="products-table-wrapper">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Uds.</th>
+                        <th class="left">Producto</th>
+                        <th class="right">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of products">
+                        <td>{{ item.units }}</td>
+                        <td class="left">{{ item.name }}</td>
+                        <td class="right">
+                            {{ item.subtotal | currency:'$':'symbol':'1.0-0' }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- LÍNEA FIJA -->
+        <div class="list-bottom-line"></div>
+    </div>
+
+    <div class="summary-container">
+        <h3 class="products-title-two">Resumen</h3>
+<!-- 
+        <div class="summary-row">
+            <span class="summary-label">Número de orden</span>
+            <span class="summary-value">{{ data.summary.orderNumber }}</span>
+        </div> -->
+
+        <div class="summary-row">
+            <span class="summary-label">Número de factura</span>
+            <span class="summary-value">{{ data.summary.invoiceNumber }}</span>
+        </div>
+
+        <div class="list-bottom-line-two"></div>
+
+        <div class="summary-row">
+            <span class="summary-label">Subtotal</span>
+            <span class="summary-value">
+                {{ data.summary.subtotal | currency:'$':'symbol':'1.0-0' }}
+            </span>
+        </div>
+
+        <div class="summary-row">
+            <span class="summary-label">Descuento financiero</span>
+            <span class="summary-value negative">
+                {{ data.summary.financialDiscount | currency:'$':'symbol':'1.0-0' }}
+            </span>
+        </div>
+
+        <div class="summary-row">
+            <span class="summary-label">Productos rechazados</span>
+            <span class="summary-value negative">
+                {{ data.summary.rejectedProducts | currency:'$':'symbol':'1.0-0' }}
+            </span>
+        </div>
+
+        <div class="list-bottom-line-two"></div>
+
+        <div class="summary-total">
+            <span>Valor total pagado</span>
+            <span>{{ data.summary.totalPaid | currency:'$':'symbol':'1.0-0' }}</span>
+        </div>
+
+        <div class="summary-row" *ngFor="let pay of data.summary.payments">
+            <span class="summary-label">{{ pay.method }}</span>
+            <span class="summary-value">{{ pay.amount | currency:'$':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="list-bottom-line"></div>
+    </div>
+
+    <!-- SOPORTE -->
+    <div class="support-container">
+        <h3 class="support-title">¿Problemas con tu pedido?</h3>
+
+        <button class="support-button">
+            <img src="assets/img/earphonesIcons.png" alt="Soporte" class="support-icon" />
+            Contactar a soporte
+        </button>
+    </div>
+
+</div>

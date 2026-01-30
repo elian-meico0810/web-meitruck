@@ -1,0 +1,103 @@
+<!-- Overlay -->
+<div class="modal-overlay">
+    <!-- Modal principal -->
+    <div class="modal-consignacion">
+        <!-- Título -->
+        <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-start">
+            Agregar consignación
+        </h2>
+
+        <!-- Campo de entrada -->
+        <div class="mb-6 text-left">
+            <label class="text-sm text-gray-600">
+                Valor de la consignación <span class="text-red-500">*</span>
+            </label>
+
+            <div class="relative mt-1">
+                <input type="text" [(ngModel)]="valor" (input)="formatearValor($event)" class="input-consignacion pl-7"
+                    placeholder="Valor" />
+            </div>
+        </div>
+
+
+        <!-- Dropdown Tipo de consignación -->
+        <div class="mb-6 text-left relative">
+            <label class="text-sm text-gray-600">
+                Tipo de consignación <span class="text-red-500">*</span>
+            </label>
+
+            <div class="relative mt-1 dropdown-consignacion" (click)="isOpen = !isOpen">
+                <!-- Botón principal -->
+                <div class="select-consignacion">
+                    <span>{{ tipoConsignacion || 'Seleccione un tipo' }}</span>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500 transition-transform"
+                        [class.rotate-180]="isOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+
+                <!-- Lista desplegable -->
+                <div *ngIf="isOpen" class="absolute dropdown-list z-[9999] animate-fadeIn">
+                    <div *ngFor="let tipo of tiposConsignacion"
+                        (click)="seleccionarTipo(tipo); $event.stopPropagation()" class="dropdown-option">
+                        {{ tipo }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Botón de adjuntar soporte -->
+        <div class="text-left mt-3">
+            <button type="button" (click)="file()" class="btn-adjuntar">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0l-4 4m4-4l4 4" />
+                </svg>
+                Adjuntar soporte
+            </button>
+        </div>
+
+
+        <!-- Mostrar soporte adjunto -->
+        <div *ngIf="selectedFile" class="flex items-center justify-between mt-6 px-2 py-2">
+            <div class="flex items-center gap-2 text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 8h10M7 12h10m-7 4h7M5 6h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z" />
+                </svg>
+                <span class="text-sm font-medium truncate max-w-[300px]">
+                    {{ selectedFile.name }}
+                </span>
+            </div>
+
+            <button (click)="removeFile()" class="text-gray-400 hover:text-gray-600 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3m-9 0h10" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Botones centrados -->
+        <div class="flex justify-between mt-6 gap-4">
+            <button (click)="cancel()" class="btn-modal btn-cancelar">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Cancelar
+            </button>
+
+            <button (click)="sendConsignacion()" class="btn-modal btn-agregar">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Agregar
+            </button>
+        </div>
+
+    </div>
+</div>

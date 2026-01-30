@@ -1,0 +1,57 @@
+.cubuttom {
+  background-color: #1651cf;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.cubuttom:hover {
+  background-color: #0f3da6;
+}
+
+:host {
+  flex: 1 1 250px; 
+}
+
+.input-search {
+    width: 332px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 24px; 
+    padding: 8px 8px 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #E6E6E7;
+    background-color: #FFFFFF;
+    color: #000000; 
+    font-size: 14px;
+    outline: none;
+    opacity: 1;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-search:focus {
+    border-color: #1651CF; 
+    box-shadow: 0 0 0 1px #1651CF;
+}
+
+.input-search::placeholder {
+    color: #7d7d7d;
+}
+
+.guia-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 320px;
+    display: block; 
+    opacity: 1;
+    border-radius: 16px;
+    padding: 24px 16px;
+    border: 1px solid #E6E6E7;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+    margin-top: 24px;
+}
+
+.titulo-campo {
+  color: #555555 !important;
+}
