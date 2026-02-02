@@ -1,63 +1,210 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { Environment } from '@core/config/environment';
+import { HttpBaseAppService } from '@core/services/http-base-app.service';
+import {
+  PlanillaDetalleFacturasResponse,
+  PedidoDetalle,
+  PedidoData,
+  DataPayment,
+  PedidoDetalleData
+} from 'src/app/interface/webInfoInvoice';
 
 @Component({
   standalone: true,
   selector: 'app-web-info-invoice',
   templateUrl: './webInfoInvoice.component.html',
   styleUrls: ['./webInfoInvoice.component.css'],
-    imports: [CommonModule] 
-
+  imports: [CommonModule]
 })
 export class WebInfoInvoiceComponent implements OnInit {
   activeTab: 'delivered' | 'rejected' = 'delivered';
-  constructor() { }
+  loading = false;
 
-  ngOnInit(): void {
-  }
-  data = {
-    delivered: [
-      { units: 30, name: 'Cerveza Miller Lite Botella 330 ml', subtotal: 75000 },
-      { units: 20, name: 'Jabón desengrasante para vajilla Axion 250 ml', subtotal: 44000 },
-      { units: 37, name: 'Jabón para ropa Suavitel Complete 700 ml', subtotal: 85100 },
-      { units: 42, name: 'Licor de Agave San Luis 750 ml', subtotal: 357000 },
-      { units: 42, name: 'Licor de Agave San Luis 750 ml', subtotal: 357000 },
-      { units: 42, name: 'Licor de Agave San Luis 750 ml', subtotal: 357000 },
-      { units: 42, name: 'Licor de Agave San Luis 750 ml', subtotal: 357000 },
-      { units: 42, name: 'Licor de Agave San Luis 750 ml', subtotal: 357000 },
-      { units: 42, name: 'Licor de Agave San Luis 750 ml', subtotal: 357000 },
-      { units: 42, name: 'Licor de Agave San Luis 750 ml', subtotal: 357000 },
-      { units: 42, name: 'Licor de Agave San Luis 750 ml', subtotal: 357000 },
-      { units: 42, name: 'Licor de Agave San Luis 750 ml', subtotal: 357000 }
-    ],
+  delivery: PedidoDetalle[] = [];
+  pedidoData: PedidoData | null = null;
+  dataPayment: DataPayment[] = [];
+  pedidosDetalleData: PedidoDetalleData[] = [];
+  refused: PedidoDetalle[] = [];
 
-    rejected: [
-      { units: 5, name: 'Gaseosa Coca-Cola Original 1.5 L', subtotal: 12000 }
-    ],
+  totalPaid = 0;
+  totalRefused = 0;
 
-    summary: {
-      orderNumber: '58760',
-      invoiceNumber: '12345678901',
-      subtotal: 712100,
-      financialDiscount: -1500,
-      rejectedProducts: -151000,
-      totalPaid: 559600,
-      payments: [
-        { method: 'Efectivo', amount: 250600 },
-        { method: 'Otos', amount: 309000 },
-        { method: 'Transferencia', amount: 309000 }
-      ]
-    }
+  // Parámetros para la API
+  params: any = {
+    direccion_id: "100"
   };
 
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    private http: HttpClient,
+    private httpAppService: HttpBaseAppService,
+  ) { }
 
-  get products() {
-    return this.data[this.activeTab];
+  ngOnInit() {
+    this.loadWsByDirection();
   }
+
+  loadWsByDirection() {
+    this.loading = true;
+
+    const requestParams = {
+      ...this.params,
+    };
+
+    this.httpAppService
+      .getPlanillaDetalleFacturas(requestParams)
+      .subscribe({
+        next: (res: PlanillaDetalleFacturasResponse) => {
+          if (res.success && res.data) {
+            this.delivery = res.data.delivery;
+            this.refused = res.data.refused;
+            this.pedidoData = res.data.pedidos_data;
+            this.dataPayment = res.data.data_payment;
+            this.pedidosDetalleData = res.data.pedidos_detalle_data;
+            this.calcularTotalPaid();
+            this.calcularTotalRefuesd();
+          }
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar de datos:', err);
+          this.loading = false;
+        }
+      });
+  }
+
   // Método para cambiar pestaña
   setActiveTab(tab: 'delivered' | 'rejected'): void {
-    console.log('Cambiando pestaña a:', tab);
     this.activeTab = tab;
   }
 
+  get rejectedProducts() {
+    return this.refused
+      .filter(item => (item.unidadesRechazadas ?? 0) > 0)
+      .map(item => ({
+        units: item.unidadesRechazadas ?? 0,
+        name: item.nombre,
+        subtotal: item.totalDineroEntrega ?? 0
+      }));
+  }
+
+
+  get delivered() {
+    if (this.activeTab === 'delivered') {
+      return this.delivery
+        .map(item => ({
+          units: item.unidadesEntregadas,
+          name: item.nombre,
+          subtotal: item.totalDineroEntrega
+        }));
+    } else {
+      return this.delivery
+        .filter(item => item.unidadesEntregadas === 0)
+        .map(item => ({
+          units: 0,
+          name: item.nombre,
+          subtotal: 0
+        }));
+    }
+  }
+
+  get products() {
+    if (this.activeTab === 'rejected') {
+      return this.rejectedProducts;
+    } else {
+      return this.delivered;
+    }
+  }
+
+  get summary() {
+    if (!this.pedidoData || !this.dataPayment?.length) {
+      return null;
+    }
+
+    const subtotal = this.delivery.reduce(
+      (total, item) => total + (item.totalDineroEntrega ?? 0),
+      0
+    );
+
+    const totalPaid = this.dataPayment.reduce(
+      (total, pago) => total + (Number(pago.valor) || 0),
+      0
+    );
+
+    const paymentMap = new Map<string, number>();
+    this.dataPayment.forEach(pago => {
+      const metodo = pago.metodoPago?.trim() || 'Método no especificado';
+      const valor = Number(pago.valor) || 0;
+
+      paymentMap.set(metodo, (paymentMap.get(metodo) || 0) + valor);
+    });
+
+    const groupedPayments = Array.from(paymentMap.entries()).map(
+      ([method, amount]) => ({
+        method,
+        amount
+      })
+    );
+
+    return {
+      orderNumber: this.pedidoData.codigo ?? 'N/A',
+      invoiceNumber: this.pedidoData.numero_factura ?? 'N/A',
+      subtotal,
+      financialDiscount: 0,
+      rejectedProducts: subtotal,
+      totalPaid,
+      payments: groupedPayments
+    };
+  }
+
+  // Total pagado
+  getTotalPaid(): number {
+    return this.dataPayment.reduce((total, pago) => {
+      return total + parseFloat(pago.valor);
+    }, 0);
+  }
+
+  get subtotal() {
+    if (this.activeTab === 'delivered') {
+      return this.delivery
+        .map(item => ({
+          units: item.unidadesEntregadas,
+          name: item.nombre,
+          subtotal: item.totalDineroEntrega
+        }));
+    } else {
+      return this.delivery
+        .filter(item => item.unidadesEntregadas === 0)
+        .map(item => ({
+          units: 0,
+          name: item.nombre,
+          subtotal: 0
+        }));
+    }
+  }
+
+  calcularTotalPaid() {
+    this.totalPaid = this.pedidosDetalleData.reduce((total, item) => {
+      const valorBase = item.valor_base_producto ?? 0;
+      const unidades = item.unidades_solicitadas ?? 0;
+      const impuestos = item.total_impuestos ?? 0;
+
+      return total + (valorBase * unidades) + impuestos;
+    }, 0);
+  }
+
+  calcularTotalRefuesd() {
+    this.totalRefused = this.pedidosDetalleData.reduce((total, item) => {
+      const valorBase = item.valor_base_producto ?? 0;
+      const unidades = item.unidades_rechazadas ?? 0;
+      const impuestos = item.total_impuestos ?? 0;
+
+      return total + (valorBase * unidades) + impuestos;
+    }, 0);
+  }
 }

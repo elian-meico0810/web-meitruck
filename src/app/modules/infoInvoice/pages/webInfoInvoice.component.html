@@ -28,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of products">
+                    <tr *ngFor="let item of activeTab === 'delivered' ? delivered : rejectedProducts">
                         <td>{{ item.units }}</td>
                         <td class="left">{{ item.name }}</td>
                         <td class="right">
@@ -45,7 +45,7 @@
 
     <div class="summary-container">
         <h3 class="products-title-two">Resumen</h3>
-<!-- 
+        <!-- 
         <div class="summary-row">
             <span class="summary-label">Número de orden</span>
             <span class="summary-value">{{ data.summary.orderNumber }}</span>
@@ -53,7 +53,7 @@
 
         <div class="summary-row">
             <span class="summary-label">Número de factura</span>
-            <span class="summary-value">{{ data.summary.invoiceNumber }}</span>
+            <span class="summary-value">{{ pedidoData?.numero_factura }}</span>
         </div>
 
         <div class="list-bottom-line-two"></div>
@@ -61,21 +61,22 @@
         <div class="summary-row">
             <span class="summary-label">Subtotal</span>
             <span class="summary-value">
-                {{ data.summary.subtotal | currency:'$':'symbol':'1.0-0' }}
+                {{ totalPaid - totalRefused | currency:'$':'symbol':'1.0-0' }}
             </span>
         </div>
+
 
         <div class="summary-row">
             <span class="summary-label">Descuento financiero</span>
             <span class="summary-value negative">
-                {{ data.summary.financialDiscount | currency:'$':'symbol':'1.0-0' }}
+                {{ pedidoData?.dfr | currency:'$':'symbol':'1.0-0' }}
             </span>
         </div>
 
         <div class="summary-row">
             <span class="summary-label">Productos rechazados</span>
             <span class="summary-value negative">
-                {{ data.summary.rejectedProducts | currency:'$':'symbol':'1.0-0' }}
+                {{ totalRefused | currency:'$':'symbol':'1.0-0' }}
             </span>
         </div>
 
@@ -83,14 +84,19 @@
 
         <div class="summary-total">
             <span>Valor total pagado</span>
-            <span>{{ data.summary.totalPaid | currency:'$':'symbol':'1.0-0' }}</span>
+            <span>{{ getTotalPaid() | currency:'$':'symbol':'1.0-0' }}</span>
         </div>
 
-        <div class="summary-row" *ngFor="let pay of data.summary.payments">
-            <span class="summary-label">{{ pay.method }}</span>
-            <span class="summary-value">{{ pay.amount | currency:'$':'symbol':'1.0-0' }}</span>
+        <div *ngIf="summary as data">
+            <div class="summary-row" *ngFor="let pay of data.payments">
+                <span class="summary-label">{{ pay.method }}</span>
+                <span class="summary-value">
+                    {{ pay.amount | currency:'$':'symbol':'1.0-0' }}
+                </span>
+            </div>
+            <div class="list-bottom-line"></div>
         </div>
-        <div class="list-bottom-line"></div>
+
     </div>
 
     <!-- SOPORTE -->

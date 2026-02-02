@@ -25,6 +25,8 @@ export class Environment {
 
 
   // Planilla detalle facturas 
-  static readonly GET_PLANILLA_DETALLE_FACTURAS = `${Environment.API_BASE_URL}/planilla-detalle-facturas/obtener-planilla-detalles-facturas/`;
+  static readonly GET_PLANILLA_DETALLE_FACTURAS = `${Environment.API_BASE_URL}/planilla-detalle-facturas/obtener-planilla-detalles-facturas`;
 
+  // Ape informacion de facturas por deireccion 
+  static readonly GET_INFO_FACUTRA_POR_DIRECCION =  `${Environment.API_BASE_URL}/direcciones/ws-calculos-detalle-factura/560/?entregados=true`;
 }

@@ -4,3 +4,4 @@ export interface ResponseConsignacion<T = any> {
   messages: string;      
   data: T;                 
 }
+

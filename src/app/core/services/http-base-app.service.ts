@@ -1,8 +1,10 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Environment } from '@core/config/environment';
 import { ETypeContent } from '@core/enum/type-content.enum';
 import { ObjParam } from '@core/interfaces/base/obj-param.interface';
 import { Observable } from 'rxjs';
+import { PlanillaDetalleFacturasResponse } from 'src/app/interface/webInfoInvoice';
 import { environment } from 'src/environments/enviroments';
 
 @Injectable({
@@ -153,5 +155,12 @@ export class HttpBaseAppService {
    */
   private _agregarTimeZone(headers: HttpHeaders): HttpHeaders {
     return headers.append('ZonaHoraria', this._timezone);
+  }
+
+  getPlanillaDetalleFacturas(params: any): Observable<PlanillaDetalleFacturasResponse> {
+    return this._httpClient.get<PlanillaDetalleFacturasResponse>(
+      this._backendUrl + Environment.GET_INFO_FACUTRA_POR_DIRECCION,
+      { params }
+    );
   }
 }
