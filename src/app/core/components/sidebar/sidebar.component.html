@@ -1,42 +1,127 @@
+<div class="bg-white overflow-hidden transition-all duration-300 h-screen  pt-6 pb-5 border-r border-gray-300"
+  [class.w-full]="!sidebarCollapsed" [class.w-[66px]]="sidebarCollapsed">
 
-<div class="w-full h-screen flex flex-col border-r border-gray-300 bg-white">
-  <div class=" top-0 left-0 z-50 flex flex-col  w-full">
+  <!-- Botón para expandir/contraer la barra lateral -->
+  <button (click)="toggleSidebar()" class="absolute">
+
+    <svg [class.transform.rotate-180]="sidebarCollapsed" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+  </button>
+
+  <!-- Agrega h-full aquí también -->
+  <div class="flex flex-col flex-1 overflow-hidden pt-6  gap-8 h-full">
     <!-- Logo -->
-    <div class="mt-5 mb-4 pl-5">
-      <a href="#">
-        <img src="assets/img/logo_meico.png" class="w-[110px] h-auto" alt="Logo Meico">
+    <div class="flex-shrink-0 transition-all duration-300" [class.pl-5]="!sidebarCollapsed"
+      [class.pl-2]="sidebarCollapsed">
+      <a href="#" class="flex w-fit pl-2">
+        <img *ngIf="sidebarCollapsed" src="assets/img/meicoIncoTwo.png" class="w-[31.76px] h-[32.02px]"
+          alt="Icono Meico" />
+      </a>
+
+      <a href="#" class="flex w-full justify-start">
+        <img *ngIf="!sidebarCollapsed" src="assets/img/logo_meico.png" class="w-[110px] h-auto" alt="Logo Meico" />
       </a>
     </div>
 
-    <!-- Navigation -->
-    <nav class="flex-1 p-3 overflow-y-auto border-t text-black border-gray-300 w-5/6 mx-auto">
-      <ul>
-        <li *ngFor="let module of modules" class="mb-2">
-          <a routerLinkActive="active-link"
-            [routerLink]="hasVisiblePages(module) ? (module.rutaModulo !== '#' ? module.rutaModulo : null) : module.rutaModulo"
-            (click)="module.rutaModulo === '#' || hasVisiblePages(module) ? toggleSubmenu(module.nombreModulo) : null"
-            class="flex items-center p-2 text-14m font-medium rounded-md transition-colors hover:bg-custom-blue hover:bg-opacity-30">
-            <i [ngClass]="'mgc_' + module.icono + ' w-9 text-2xl icono'"></i>
-            {{ module.nombreModulo }}
-            <svg *ngIf="hasVisiblePages(module)"
-              [ngClass]="{'transform rotate-180': submenuOpen[module.nombreModulo], 'transform rotate-90': !submenuOpen[module.nombreModulo]}"
-              class="w-4 h-4 ml-auto transition-transform duration-200" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-            </svg>
-          </a>
 
-          <ul *ngIf="hasVisiblePages(module) && submenuOpen[module.nombreModulo]" class="pl-8 mt-1 space-y-1">
-            <ng-container *ngFor="let page of module.paginas">
-              <li *ngIf="page.paginaVisible">
-                <a routerLinkActive="active-link" [routerLink]="page.rutaPagina"
-                  class="flex items-center p-2 text-sm font-medium rounded-md hover:bg-gray-100 transition-colors">
-                  {{ page.nombrePagina }}
-                </a>
-              </li>
-            </ng-container>
-          </ul>
-        </li>
-      </ul>
-    </nav>
+
+
+    <!-- Navigation - Agrega min-h-0 aquí -->
+    <div class="flex-1 overflow-y-auto min-h-0">
+      <nav class="px-3">
+        <ul>
+          <li *ngFor="let module of modules" class="mb-2">
+            <a routerLinkActive="active-link"
+              [routerLink]="hasVisiblePages(module) ? (module.rutaModulo !== '#' ? module.rutaModulo : null) : module.rutaModulo"
+              (click)="module.rutaModulo === '#' || hasVisiblePages(module) ? toggleSubmenu(module.nombreModulo) : null"
+              class="flex items-center p-3 text-14m font-medium rounded-md transition-colors hover:bg-custom-blue hover:bg-opacity-30"
+              [class.justify-center]="sidebarCollapsed" [class.p-2]="sidebarCollapsed">
+
+              <i [ngClass]="'mgc_' + module.icono + ' text-2xl icono'" [class.w-9]="!sidebarCollapsed"
+                [class.w-6]="sidebarCollapsed" class="items-center"></i>
+
+              <!-- Texto del módulo - se oculta cuando la barra está contraída -->
+              <span class="transition-all duration-300 overflow-hidden whitespace-nowrap"
+                [class.ml-3]="!sidebarCollapsed" [class.w-0]="sidebarCollapsed" [class.opacity-0]="sidebarCollapsed"
+                [class.opacity-100]="!sidebarCollapsed">
+                {{ module.nombreModulo }}
+              </span>
+
+              <!-- Flecha para submenús - se oculta cuando la barra está contraída -->
+              <svg *ngIf="hasVisiblePages(module) && !sidebarCollapsed"
+                [ngClass]="{'transform rotate-180': submenuOpen[module.nombreModulo], 'transform rotate-90': !submenuOpen[module.nombreModulo]}"
+                class="w-4 h-4 ml-auto transition-transform duration-200" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+              </svg>
+            </a>
+
+            <!-- Submenús - se ocultan cuando la barra está contraída -->
+            <ul *ngIf="hasVisiblePages(module) && submenuOpen[module.nombreModulo] && !sidebarCollapsed"
+              class="pl-12 mt-1 space-y-1">
+              <ng-container *ngFor="let page of module.paginas">
+                <li *ngIf="page.paginaVisible">
+                  <a routerLinkActive="active-link" [routerLink]="page.rutaPagina"
+                    class="flex items-center p-3 text-sm font-medium rounded-md hover:bg-gray-100 transition-colors">
+                    {{ page.nombrePagina }}
+                  </a>
+                </li>
+              </ng-container>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Sección del usuario -->
+    <div class="mt-auto px-4 bg-white flex-shrink-0" [class.flex]="true" [class.flex-col]="sidebarCollapsed"
+      [class.items-center]="sidebarCollapsed" [class.space-y-3]="sidebarCollapsed" [class.flex-row]="!sidebarCollapsed"
+      [class.items-center]="!sidebarCollapsed" [class.space-x-3]="!sidebarCollapsed">
+
+      <!-- Avatar -->
+      <div class="relative" [class.mx-auto]="sidebarCollapsed">
+        <button type="button" class="relative flex rounded-full text-sm">
+          <img *ngIf="userLogin.Foto != ''" class="size-10 rounded-full" [src]="userLogin.Foto"
+            [class.size-8]="sidebarCollapsed" />
+          <div *ngIf="userLogin.Foto === ''" class="size-10 rounded-full bg-blue-100 flex items-center justify-center"
+            [class.size-8]="sidebarCollapsed">
+            <span class="text-blue-600 font-semibold text-sm" [class.text-xs]="sidebarCollapsed">
+              {{ userLogin.FirstName?.charAt(0) || 'U' }}
+            </span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Info usuario (solo abierto) -->
+      <div *ngIf="!sidebarCollapsed" class="text-left flex-1">
+        <span class="block font-semibold text-sm cursor-pointer hover:underline" (click)="OnChangeAccount()">
+          {{ userLogin.FirstName }}
+        </span>
+        <span class="text-gray-400 block text-xs">
+          Administrador
+        </span>
+      </div>
+
+      <!-- Botón salir - Con iconos condicionales y tamaños ajustados -->
+      <button (click)="toggleSidebar()" class="text-blue-800 hover:text-blue-900 transition-colors"
+        [class.mt-2]="sidebarCollapsed" [class.self-center]="sidebarCollapsed">
+        <div class="relative flex items-center justify-center" [class.w-[32px]]="!sidebarCollapsed"
+          [class.h-[33px]]="!sidebarCollapsed" [class.w-8]="sidebarCollapsed" [class.h-8]="sidebarCollapsed">
+
+          <img *ngIf="!sidebarCollapsed" src="assets/img/inconExist.png"
+            class="w-[16px] h-auto transition-all duration-300" alt="Toggle sidebar" />
+
+          <img *ngIf="!sidebarCollapsed" src="assets/img/inconExist.png"
+            class="w-[16px] h-auto transition-all duration-300" alt="Toggle sidebar" />
+
+          <img *ngIf="sidebarCollapsed" src="assets/img/iconOpen.png" class="w-3 h-auto transition-all duration-300"
+            alt="Toggle sidebar" />
+
+          <img *ngIf="sidebarCollapsed" src="assets/img/iconOpen.png" class="w-3 h-auto transition-all duration-300"
+            alt="Toggle sidebar" />
+        </div>
+      </button>
+    </div>
   </div>
+</div>

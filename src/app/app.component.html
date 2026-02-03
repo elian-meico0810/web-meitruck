@@ -21,21 +21,28 @@
 </ng-template>
 
 <ng-template #appContent>
-
-  <div class="grid grid-cols-12 grid-rows-12 gap-1 h-screen">
-    <div class="hidden">
-      <app-sidebar></app-sidebar>
-    </div>
-    <div class="col-span-12 row-span-1">
+<div class="flex h-screen bg-white">
+    <!-- Navbar en la parte superior (como antes) -->
+    <!-- <div class="w-full">
       <app-navbar></app-navbar>
-    </div>
-    <div class="col-span-12 row-span-4">
+    </div> -->
+
+    <!-- Contenido principal con sidebar fijo -->
+    <div class="flex flex-1 overflow-hidden">
+      <!-- Sidebar FIJO -->
+      <div class="w-[252px] h-full">
+        <div class="h-full flex flex-col overflow-hidden">
+          <app-sidebar></app-sidebar>
+        </div>
+      </div>
+
+      <!-- Área de contenido (CON scroll si es necesario) -->
+      <div class="flex-1 p-6 overflow-auto">
         <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
-
 </ng-template>
-
 
 
 
