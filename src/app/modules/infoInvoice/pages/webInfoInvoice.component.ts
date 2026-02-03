@@ -24,11 +24,9 @@ export class WebInfoInvoiceComponent implements OnInit {
   activeTab: 'delivered' | 'rejected' = 'delivered';
   loading = false;
 
-  delivery: PedidoDetalle[] = [];
   pedidoData: PedidoData | null = null;
   dataPayment: DataPayment[] = [];
   pedidosDetalleData: PedidoDetalleData[] = [];
-  refused: PedidoDetalle[] = [];
 
   totalPaid = 0;
   totalRefused = 0;
@@ -61,13 +59,12 @@ export class WebInfoInvoiceComponent implements OnInit {
       .subscribe({
         next: (res: PlanillaDetalleFacturasResponse) => {
           if (res.success && res.data) {
-            this.delivery = res.data.delivery;
-            this.refused = res.data.refused;
             this.pedidoData = res.data.pedidos_data;
             this.dataPayment = res.data.data_payment;
             this.pedidosDetalleData = res.data.pedidos_detalle_data;
             this.calcularTotalPaid();
             this.calcularTotalRefuesd();
+            this.subtotalAll();
           }
           this.loading = false;
         },
@@ -84,33 +81,36 @@ export class WebInfoInvoiceComponent implements OnInit {
   }
 
   get rejectedProducts() {
-    return this.refused
-      .filter(item => (item.unidadesRechazadas ?? 0) > 0)
+    return this.pedidosDetalleData
+      .filter(item =>
+        (item.unidades_rechazadas ?? 0) > 0
+      )
       .map(item => ({
-        units: item.unidadesRechazadas ?? 0,
-        name: item.nombre,
-        subtotal: item.totalDineroEntrega ?? 0
+        units: item.unidades_rechazadas ?? 0,
+        code: item.codigo_producto?.trim(),
+        name: item.nombre_producto?.trim(),
+        subtotal:
+          (item.valor_base_producto ?? 0) *
+          (item.unidades_rechazadas ?? 0) +
+          (item.total_impuestos ?? 0)
       }));
   }
 
-
   get delivered() {
-    if (this.activeTab === 'delivered') {
-      return this.delivery
-        .map(item => ({
-          units: item.unidadesEntregadas,
-          name: item.nombre,
-          subtotal: item.totalDineroEntrega
-        }));
-    } else {
-      return this.delivery
-        .filter(item => item.unidadesEntregadas === 0)
-        .map(item => ({
-          units: 0,
-          name: item.nombre,
-          subtotal: 0
-        }));
-    }
+    return this.pedidosDetalleData
+      .filter(item =>
+        (item.unidades_rechazadas ?? 0) <
+        (item.unidades_solicitadas ?? 0)
+      )
+      .map(item => ({
+        units: item.unidades_entregadas ?? 0,
+        code: item.codigo_producto?.trim(),
+        name: item.nombre_producto?.trim(),
+        subtotal:
+          (item.valor_base_producto ?? 0) *
+          (item.unidades_entregadas ?? 0) +
+          (item.total_impuestos ?? 0)
+      }));
   }
 
   get products() {
@@ -125,11 +125,6 @@ export class WebInfoInvoiceComponent implements OnInit {
     if (!this.pedidoData || !this.dataPayment?.length) {
       return null;
     }
-
-    const subtotal = this.delivery.reduce(
-      (total, item) => total + (item.totalDineroEntrega ?? 0),
-      0
-    );
 
     const totalPaid = this.dataPayment.reduce(
       (total, pago) => total + (Number(pago.valor) || 0),
@@ -154,13 +149,26 @@ export class WebInfoInvoiceComponent implements OnInit {
     return {
       orderNumber: this.pedidoData.codigo ?? 'N/A',
       invoiceNumber: this.pedidoData.numero_factura ?? 'N/A',
-      subtotal,
       financialDiscount: 0,
-      rejectedProducts: subtotal,
+      rejectedProducts: 0,
       totalPaid,
       payments: groupedPayments
     };
   }
+
+  subtotalAll() {
+    const subtotalAll = this.pedidosDetalleData.reduce(
+      (total, item) =>
+        total +
+        ((item.valor_base_producto ?? 0) * (item.unidades_entregadas ?? 0)) +
+        (item.total_impuestos ?? 0),
+      0
+    );
+
+    return subtotalAll;
+  }
+
+
 
   // Total pagado
   getTotalPaid(): number {
@@ -169,24 +177,6 @@ export class WebInfoInvoiceComponent implements OnInit {
     }, 0);
   }
 
-  get subtotal() {
-    if (this.activeTab === 'delivered') {
-      return this.delivery
-        .map(item => ({
-          units: item.unidadesEntregadas,
-          name: item.nombre,
-          subtotal: item.totalDineroEntrega
-        }));
-    } else {
-      return this.delivery
-        .filter(item => item.unidadesEntregadas === 0)
-        .map(item => ({
-          units: 0,
-          name: item.nombre,
-          subtotal: 0
-        }));
-    }
-  }
 
   calcularTotalPaid() {
     this.totalPaid = this.pedidosDetalleData.reduce((total, item) => {

@@ -61,7 +61,7 @@
         <div class="summary-row">
             <span class="summary-label">Subtotal</span>
             <span class="summary-value">
-                {{ totalPaid - totalRefused | currency:'$':'symbol':'1.0-0' }}
+                {{  subtotalAll() | currency:'$':'symbol':'1.0-0' }}
             </span>
         </div>
 

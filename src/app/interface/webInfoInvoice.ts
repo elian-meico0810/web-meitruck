@@ -48,6 +48,9 @@ export interface PedidoDetalleData {
     valor_base_producto?: number;
     unidades_solicitadas?: number;
     unidades_rechazadas?: number;
+    codigo_producto?: string;
+    nombre_producto?:string;
+    unidades_entregadas?: number;
 }
 
 export interface PlanillaDetalleFacturasData {
